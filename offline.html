@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Няма връзка | Д-р Николай Йорданов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0A2F5A 0%, #1A4F8A 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .offline-container {
+            max-width: 600px;
+        }
+
+        .offline-icon {
+            font-size: 6rem;
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        .info-box {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .info-box h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #D4AF37;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+        }
+
+        .retry-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: white;
+            color: #0A2F5A;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📡</div>
+        <h1>Няма интернет връзка</h1>
+        <p>Изглежда нямате интернет връзка в момента. Моля, проверете връзката си и опитайте отново.</p>
+
+        <div class="info-box">
+            <h3>📞 Важна информация за контакт</h3>
+            <div class="info-item">
+                <span>Телефон:</span>
+                <strong>+359 XXX XXX XXX</strong>
+            </div>
+            <div class="info-item">
+                <span>Адрес:</span>
+                <strong>Колхида-продължение, каб. 31/34</strong>
+            </div>
+            <div class="info-item">
+                <span>Град:</span>
+                <strong>Пловдив</strong>
+            </div>
+        </div>
+
+        <button class="retry-btn" onclick="location.reload()">🔄 Опитай отново</button>
+    </div>
+</body>
+</html>
