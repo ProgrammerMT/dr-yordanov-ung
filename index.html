@@ -160,7 +160,6 @@
             padding: 0;
         }
 
-        /* Fix for full width - remove max-width constraints */
         .container-full {
             width: 100%;
             margin: 0;
@@ -429,6 +428,8 @@
             flex-direction: column;
             gap: 5px;
             cursor: pointer;
+            z-index: 1001;
+            position: relative;
         }
 
         .menu-toggle span {
@@ -437,6 +438,38 @@
             background: white;
             border-radius: 2px;
             transition: all 0.3s;
+        }
+
+        /* Hamburger to X animation */
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Mobile menu overlay */
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-overlay.active {
+            display: block;
+            opacity: 1;
         }
 
         /* Section Styling - FULL WIDTH */
@@ -637,52 +670,54 @@
             display: block;
         }
 
-        /* Reviews Section */
-        .reviews-container {
-            position: relative;
-            padding: 2rem 0;
+        /* SuperDoc Reviews CTA */
+        .superdoc-cta {
+            background: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            width: 100%;
         }
 
-        .review-card {
-            background: white;
-            padding: 2.5rem;
+        .superdoc-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-light);
+            padding: 3rem;
             border-radius: 20px;
             box-shadow: var(--shadow-soft);
-            margin: 1rem 0;
-            transition: transform 0.3s;
         }
 
-        .review-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .reviewer-info h4 {
+        .superdoc-card h3 {
+            font-size: 2rem;
             color: var(--primary);
+            margin-bottom: 1rem;
             font-weight: 700;
-            margin-bottom: 0.3rem;
         }
 
-        .review-date {
-            color: #999;
-            font-size: 0.9rem;
+        .superdoc-card p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.8;
         }
 
-        .stars {
-            color: var(--gold);
+        .rating-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
             font-size: 1.2rem;
         }
 
-        .review-text {
-            color: #555;
-            line-height: 1.8;
-            font-style: italic;
+        .rating-stars {
+            color: var(--gold);
+            font-size: 1.8rem;
+        }
+
+        .rating-count {
+            color: var(--primary);
+            font-weight: 700;
         }
 
         /* Schedule Section */
@@ -837,11 +872,14 @@
                 top: 0;
                 right: -100%;
                 width: 70%;
+                max-width: 300px;
                 height: 100vh;
                 background: var(--primary);
                 flex-direction: column;
                 padding: 5rem 2rem;
                 transition: right 0.3s;
+                z-index: 1000;
+                overflow-y: auto;
             }
 
             .nav-links.active {
@@ -896,6 +934,55 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 168, 204, 0.3);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(100px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 168, 204, 0.4);
+        }
+
+        .back-to-top:active {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 640px) {
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -913,7 +1000,6 @@
                 <li><a href="#about">За мен</a></li>
                 <li><a href="#services">Услуги</a></li>
                 <li><a href="#video">Локация</a></li>
-                <li><a href="#reviews">Отзиви</a></li>
                 <li><a href="#schedule">Работно време</a></li>
                 <li><a href="#contact">Контакт</a></li>
             </ul>
@@ -924,6 +1010,9 @@
             </div>
         </div>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
 
     <!-- Hero Section -->
     <section class="hero" id="hero">
@@ -949,7 +1038,7 @@
             </div>
 
             <div class="cta-group">
-                <a href="#contact" class="btn btn-primary">📞 Запази час</a>
+                <a href="https://www.superdoc.bg" target="_blank" rel="noopener noreferrer" class="btn btn-primary">📅 Запази час в SuperDoc</a>
                 <a href="#about" class="btn btn-outline">👨‍⚕️ Повече за мен</a>
             </div>
         </div>
@@ -1015,7 +1104,7 @@
                         </div>
                     </div>
 
-                    <a href="#contact" class="btn btn-primary" style="margin-top:2rem;">Запази час</a>
+                    <a href="https://www.superdoc.bg" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="margin-top:2rem;">📅 Запази час в SuperDoc</a>
                 </div>
             </div>
         </div>
@@ -1092,64 +1181,26 @@
         </div>
     </section>
 
-    <!-- Reviews Section -->
-    <section id="reviews">
+    <!-- SuperDoc Reviews CTA Section -->
+    <section class="superdoc-cta">
         <div class="section-container">
             <div class="section-header fade-in">
                 <div class="section-tag">ОТЗИВИ</div>
-                <h2 class="section-title">Какво казват пациентите</h2>
-                <p class="section-desc">Реални отзиви от SuperDoc.bg</p>
+                <h2 class="section-title">Над 1000 доволни пациенти</h2>
+                <p class="section-desc">Прочетете какво споделят пациентите в SuperDoc.bg</p>
             </div>
 
-            <div class="reviews-container">
-                <div class="review-card fade-in">
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <h4>Мария З.</h4>
-                            <p class="review-date">18 ноември 2025</p>
-                        </div>
-                        <div class="stars">⭐⭐⭐⭐⭐</div>
-                    </div>
-                    <p class="review-text">Д-р Йорданов е страхотен! Много обстоен преглед направи на детето ми, внимателен е, има отношение към малките пациенти! Обяснява много подробно и разбираемо и отговаря на всички допълнителни въпроси! Препоръчвам го с две ръце!</p>
+            <div class="superdoc-card fade-in">
+                <div class="rating-display">
+                    <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                    <span class="rating-count">5.0 / 5.0</span>
                 </div>
 
-                <div class="review-card fade-in">
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <h4>Мария П.</h4>
-                            <p class="review-date">6 октомври 2025</p>
-                        </div>
-                        <div class="stars">⭐⭐⭐⭐⭐</div>
-                    </div>
-                    <p class="review-text">Изключително доволна съм от прегледа (както първичен, така и вторичен) при Д-р Йорданов. Без излишно губене на време в разговори, но с достатъчно внимание към пациента, ми беше поставена диагноза и назначено лечение, което вече дава резултат.</p>
-                </div>
+                <h3>1148 пациентски отзива</h3>
+                <p>Д-р Йорданов има висок рейтинг сред УНГ специалистите в Пловдив. Пациентите споделят положителни мнения за обстойните прегледи, професионализма и грижата, особено при работа с деца.</p>
 
-                <div class="review-card fade-in">
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <h4>Цветомира Д.</h4>
-                            <p class="review-date">23 септември 2025</p>
-                        </div>
-                        <div class="stars">⭐⭐⭐⭐⭐</div>
-                    </div>
-                    <p class="review-text">Всеки път, когато го посещаваме съм очарована от това колко спокоен, човечен и с отношение към децата е д-р Йорданов, винаги извършва обстоен преглед и разглежда проблема в детайли.</p>
-                </div>
-
-                <div class="review-card fade-in">
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <h4>Огнян Й.</h4>
-                            <p class="review-date">15 септември 2025</p>
-                        </div>
-                        <div class="stars">⭐⭐⭐⭐⭐</div>
-                    </div>
-                    <p class="review-text">Прегледите при Д-р. Н.Йорданов както винаги са с внимание, с обстоен преглед без претупване, с проследяване на заболяването (ако се налага) и без изписване на посоки антибиотици, а след направено изследване.</p>
-                </div>
-            </div>
-
-            <div style="text-align:center;margin-top:3rem;">
-                <a href="https://superdoc.bg/lekar/d-r-nikolay-yordanov-8082" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="color:var(--primary);border-color:var(--primary);">
-                    Вижте още отзиви в SuperDoc.bg
+                <a href="https://www.superdoc.bg" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="margin-top:1rem;">
+                    📖 Прочети всички отзиви в SuperDoc.bg
                 </a>
             </div>
         </div>
@@ -1196,6 +1247,12 @@
                     <p style="color:var(--primary);font-weight:600;margin-bottom:0.5rem;">ℹ️ Важна информация</p>
                     <p style="color:#666;">Работното време се редува - единия ден е сутрешна смяна (08:30-11:50), на другия ден е следобедна (11:30-15:10). Не работи в празнични дни.</p>
                 </div>
+
+                <div style="text-align:center;margin-top:2rem;">
+                    <a href="https://www.superdoc.bg" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                        📅 Запази час онлайн в SuperDoc
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -1206,7 +1263,7 @@
             <div class="section-header fade-in">
                 <div class="section-tag">КОНТАКТ</div>
                 <h2 class="section-title">Свържете се с мен</h2>
-                <p class="section-desc">Готов съм да отговоря на вашите въпроси</p>
+                <p class="section-desc">За въпроси и допълнителна информация</p>
             </div>
 
             <div class="contact-grid">
@@ -1214,9 +1271,20 @@
                     <div class="contact-item">
                         <div class="contact-icon">📞</div>
                         <div class="contact-details">
-                            <h3>Телефон за записване</h3>
+                            <h3>Телефон за връзка</h3>
                             <a href="tel:+359896593754" class="phone-link">+359 896 593 754</a>
-                            <p style="margin-top:0.5rem;color:#999;font-size:0.9rem;">Обадете се за запазване на час</p>
+                            <p style="margin-top:0.5rem;color:#999;font-size:0.9rem;">За въпроси и допълнителна информация</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📅</div>
+                        <div class="contact-details">
+                            <h3>Запазване на час</h3>
+                            <a href="https://www.superdoc.bg" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:1.2rem;display:inline-block;margin-top:0.5rem;">
+                                Запази час в SuperDoc.bg →
+                            </a>
+                            <p style="margin-top:0.5rem;color:#999;font-size:0.9rem;">Онлайн записване 24/7</p>
                         </div>
                     </div>
 
@@ -1238,21 +1306,11 @@
                             <p>Кабинетът е в края на паркинга за пациенти. Има и вход през "Стационар" на болницата. Следвайте указателните табели.</p>
                         </div>
                     </div>
-
-                    <div class="contact-item">
-                        <div class="contact-icon">🌐</div>
-                        <div class="contact-details">
-                            <h3>SuperDoc профил</h3>
-                            <a href="https://superdoc.bg/lekar/d-r-nikolay-yordanov-8082" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;font-weight:600;">
-                                Виж профила в SuperDoc.bg →
-                            </a>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="map-container fade-in">
                     <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d917.9757526980914!2d24.716111675992252!3d42.1267600882104!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14acd026d896a0c7%3A0x73441c01a6779b08!2z0JrQvtC80LDRgtC10LLRgdC60L4g0YjQvtGB0LXQl9Cw0L_QsNC00LXQvSwgNDAwNCDQn9C70L7QstC00LjQsg!5e1!3m2!1sbg!2sbg!4v1765564234314!5m2!1sbg!2sbg"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d683.2645779228671!2d24.716438782894453!3d42.12691533514303!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14acd026d896a0c7%3A0x73441c01a6779b08!2z0JrQvtC80LDRgtC10LLRgdC60L4g0YjQvtGB0LXQl9Cw0L_QsNC00LXQvSwgNDAwNCDQn9C70L7QstC00LjQsg!5e1!3m2!1sbg!2sbg!4v1766853440474!5m2!1sbg!2sbg"
                         width="100%"
                         height="100%"
                         style="border:0;"
@@ -1274,9 +1332,9 @@
             <div class="footer-links">
                 <a href="#about">За мен</a>
                 <a href="#services">Услуги</a>
-                <a href="#reviews">Отзиви</a>
+                <a href="#schedule">Работно време</a>
                 <a href="#contact">Контакт</a>
-                <a href="https://superdoc.bg/lekar/d-r-nikolay-yordanov-8082" target="_blank" rel="noopener noreferrer">SuperDoc</a>
+                <a href="https://www.superdoc.bg" target="_blank" rel="noopener noreferrer">SuperDoc</a>
             </div>
 
             <div class="copyright">
@@ -1285,6 +1343,11 @@
             </div>
         </div>
     </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Обратно нагоре">
+        ↑
+    </button>
 
     <script>
         // Preloader
@@ -1304,19 +1367,57 @@
             }
         });
 
-        // Mobile menu toggle
+        // Mobile menu toggle with improved functionality
         const menuToggle = document.getElementById('menuToggle');
         const navLinks = document.getElementById('navLinks');
+        const navOverlay = document.getElementById('navOverlay');
         
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
+        // Function to open menu
+        function openMenu() {
+            navLinks.classList.add('active');
+            navOverlay.classList.add('active');
+            menuToggle.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+        }
+
+        // Function to close menu
+        function closeMenu() {
+            navLinks.classList.remove('active');
+            navOverlay.classList.remove('active');
+            menuToggle.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        // Toggle menu on hamburger click
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (navLinks.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
         });
 
-        // Close mobile menu when clicking on a link
+        // Close menu when clicking on overlay
+        navOverlay.addEventListener('click', closeMenu);
+
+        // Close menu when clicking on a link
         document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+
+        // Close menu when window is resized to desktop size
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 968 && navLinks.classList.contains('active')) {
+                closeMenu();
+            }
         });
 
         // Smooth scroll
@@ -1351,6 +1452,26 @@
             observer.observe(el);
         });
 
+        // Back to Top Button functionality
+        const backToTopBtn = document.getElementById('backToTop');
+
+        // Show/hide button based on scroll position
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        // Scroll to top on click
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
         // Register Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -1365,7 +1486,7 @@
         }
     </script>
 
-    <!-- Advanced JavaScript (поставете файла в /js/advanced.js) -->
+    <!-- Advanced JavaScript -->
     <script src="js/advanced.js"></script>
 </body>
 </html>
