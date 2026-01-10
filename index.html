@@ -655,19 +655,108 @@
             width: 100%;
         }
 
-        .video-container {
-            max-width: 900px;
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
             margin: 0 auto;
+            margin-top: 3rem;
+        }
+
+        .video-card {
             position: relative;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
         }
 
-        .video-container video {
+        .video-card-header {
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .video-card-header h3 {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .video-card-header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .video-wrapper {
+            position: relative;
             width: 100%;
-            height: auto;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .video-card video {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
             display: block;
+            background: #000;
+        }
+
+        /* Mobile responsive for videos */
+        @media (max-width: 968px) {
+            .videos-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                max-width: 500px;
+            }
+
+            .video-card video {
+                max-height: 600px;
+            }
+
+            .video-card-header h3 {
+                font-size: 1.1rem;
+            }
+
+            .video-card-header p {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .video-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .videos-grid {
+                gap: 1.5rem;
+            }
+
+            .video-card-header {
+                padding: 1.2rem;
+            }
+
+            .video-card-header h3 {
+                font-size: 1rem;
+            }
+
+            .video-card video {
+                max-height: 500px;
+            }
         }
 
         /* SuperDoc Reviews CTA */
@@ -1058,7 +1147,7 @@
         <div class="section-container">
             <div class="section-header fade-in">
                 <div class="section-tag">ЗА МЕН</div>
-                <h2 class="section-title">Вашият доверен УНГ специалист</h2>
+                <h2 class="section-title">УНГ специалист</h2>
                 <p class="section-desc">С над четвърт век опит в оториноларингологията</p>
             </div>
 
@@ -1071,7 +1160,7 @@
                     <h3>Д-р Николай Йорданов</h3>
                     <p>Специалист по УНГ болести в Пловдив с над 25 години опит в диагностиката и лечението на заболявания на ухото, носа и гърлото.</p>
                     
-                    <p>Извършвам консултативно-диагностични прегледи и лечение на проблеми в слуха, носа и гърлото, включително аудиометрия, микроотоскопия, ендоназална хирургия, микроларингохирургия и отохирургия.</p>
+                    <p>Извършвам консултативно-диагностични прегледи и лечение на проблеми в слуха, носа и гърлото, включително аудиометрия, микроотоскопия, микроларингохирургия и отохирургия.</p>
 
                     <div class="credentials">
                         <div class="credential-item">
@@ -1129,7 +1218,7 @@
                 <div class="service-card fade-in">
                     <div class="service-icon">👃</div>
                     <h3>Носни заболявания</h3>
-                    <p>Ендоназална хирургия, консервативно и оперативно лечение на носа и синусите, лечение на синузит и ринит.</p>
+                    <p>Консервативно и оперативно лечение на носа и синусите, лечение на синузит и ринит.</p>
                 </div>
 
                 <div class="service-card fade-in">
@@ -1164,20 +1253,43 @@
         <div class="section-header fade-in">
             <div class="section-tag" style="color:rgba(255,255,255,0.9);">ЛОКАЦИЯ</div>
             <h2 class="section-title" style="color:white;">Как да стигнете до кабинета</h2>
-            <p class="section-desc" style="color:rgba(255,255,255,0.8);">Видео упътване от първо лице</p>
+            <p class="section-desc" style="color:rgba(255,255,255,0.8);">Видео упътвания от първо лице - два възможни входа</p>
         </div>
 
-        <div class="video-container fade-in">
-            <video controls poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='506'%3E%3Crect fill='%230A2F5A' width='900' height='506'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='32' fill='white'%3E▶️ Натиснете за видео%3C/text%3E%3C/svg%3E">
-                <source src="videos/office-directions.mp4" type="video/mp4">
-                Вашият браузър не поддържа видео.
-            </video>
+        <div class="videos-grid fade-in">
+            <!-- Video 1 - Main entrance through parking -->
+            <div class="video-card">
+                <div class="video-card-header">
+                    <h3>🚗 Основен вход - Паркинг</h3>
+                    <p>Колхида-продължение, каб. 31/34 (сградата на физиотерапия). Кабинетът е в края на паркинга за пациенти.</p>
+                </div>
+                <div class="video-wrapper">
+                    <video controls poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='600'%3E%3Crect fill='%230A2F5A' width='400' height='600'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='20' fill='white'%3E▶️ Натиснете за видео%3C/text%3E%3C/svg%3E">
+                        <source src="videos/parking-entrance.mp4" type="video/mp4">
+                        Вашият браузър не поддържа видео.
+                    </video>
+                </div>
+            </div>
+
+            <!-- Video 2 - Alternative entrance through hospital -->
+            <div class="video-card">
+                <div class="video-card-header">
+                    <h3>🏥 Алтернативен вход - Стационар</h3>
+                    <p>Вход през "Стационар" на болницата. Следвайте указателните табели до кабинет 31/34.</p>
+                </div>
+                <div class="video-wrapper">
+                    <video controls poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='600'%3E%3Crect fill='%230A2F5A' width='400' height='600'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='20' fill='white'%3E▶️ Натиснете за видео%3C/text%3E%3C/svg%3E">
+                        <source src="videos/hospital-entrance.mp4" type="video/mp4">
+                        Вашият браузър не поддържа видео.
+                    </video>
+                </div>
+            </div>
         </div>
 
         <div style="text-align:center;margin-top:3rem;">
             <p style="color:white;font-size:1.2rem;margin-bottom:1rem;">📍 Многопрофилна Транспортна Болница - Пловдив</p>
-            <p style="color:rgba(255,255,255,0.8);">Колхида-продължение, каб. 31/34 (сградата на физиотерапия)</p>
-            <p style="color:rgba(255,255,255,0.7);margin-top:1rem;">Кабинетът е в края на паркинга за пациенти. Има и вход през "Стационар" на болницата. Следвайте указателните табели.</p>
+            <p style="color:rgba(255,255,255,0.8);font-size:1.1rem;margin-bottom:0.5rem;">Колхида-продължение, каб. 31/34 (сградата на физиотерапия)</p>
+            <p style="color:rgba(255,255,255,0.7);margin-top:1rem;max-width:800px;margin-left:auto;margin-right:auto;line-height:1.8;">Можете да стигнете до кабинета по два начина: през основния паркинг за пациенти или през входа на "Стационар". И двата пътя водят до кабинет 31/34 в сградата на физиотерапия.</p>
         </div>
     </section>
 
@@ -1310,7 +1422,7 @@
 
                 <div class="map-container fade-in">
                     <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d683.2645779228671!2d24.716438782894453!3d42.12691533514303!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14acd026d896a0c7%3A0x73441c01a6779b08!2z0JrQvtC80LDRgtC10LLRgdC60L4g0YjQvtGB0LXQl9Cw0L_QsNC00LXQvSwgNDAwNCDQn9C70L7QstC00LjQsg!5e1!3m2!1sbg!2sbg!4v1766853440474!5m2!1sbg!2sbg"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d917.9757526980914!2d24.716111675992252!3d42.1267600882104!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14acd026d896a0c7%3A0x73441c01a6779b08!2z0JrQvtC80LDRgtC10LLRgdC60L4g0YjQvtGB0LXQl9Cw0L_QsNC00LXQvSwgNDAwNCDQn9C70L7QstC00LjQsg!5e1!3m2!1sbg!2sbg!4v1765564234314!5m2!1sbg!2sbg"
                         width="100%"
                         height="100%"
                         style="border:0;"
@@ -1334,7 +1446,7 @@
                 <a href="#services">Услуги</a>
                 <a href="#schedule">Работно време</a>
                 <a href="#contact">Контакт</a>
-                <a href="https://www.superdoc.bg" target="_blank" rel="noopener noreferrer">SuperDoc</a>
+                <a href="https://superdoc.bg/lekar/d-r-nikolay-yordanov-8082" target="_blank" rel="noopener noreferrer">SuperDoc</a>
             </div>
 
             <div class="copyright">
